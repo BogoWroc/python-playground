@@ -1,0 +1,57 @@
+import datetime
+import pprint
+
+from pymongo import MongoClient
+
+
+def create_connection_to_test_db():
+    client = MongoClient('localhost', 27017)
+    return client.test_db
+
+
+def insert_data_into_post_collection(db, author):
+    post = {"author": author,
+            "text": "My first blog post!",
+            "tags": ["mongodb", "python", "pymongo"],
+            "date": datetime.datetime.utcnow()}
+
+    posts = db.posts
+    post_id = posts.insert_one(post).inserted_id
+    print(post_id)
+
+
+def display_all_collection_names(db):
+    print(db.collection_names(include_system_collections=False))
+
+
+def display_any_post(db):
+    print("##### ANY POST")
+    pprint.pprint(db.posts.find_one())
+
+
+def display_post_by_author(db, author):
+    print("##### POST BY AUTHOR")
+    pprint.pprint(db.posts.find_one({"author": author}))
+
+
+def display_all_posts(db):
+    print("##### ALL POSTS")
+    for post in db.posts.find():
+        pprint.pprint(post)
+
+
+def display_all_posts_by(db, author):
+    print("##### ALL POSTS BY AUTHOR")
+    for post in db.posts.find({"author": author}):
+        pprint.pprint(post)
+
+
+if __name__ == '__main__':
+    test_db = create_connection_to_test_db()
+    insert_data_into_post_collection(test_db, author="Alan")
+    insert_data_into_post_collection(test_db, author="Frank")
+    display_all_collection_names(test_db)
+    display_any_post(test_db)
+    display_post_by_author(test_db, author="Alan")
+    display_all_posts(test_db)
+    display_all_posts_by(test_db, author="Alan")

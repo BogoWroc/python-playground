@@ -1,0 +1,1 @@
+https://www.codementor.io/irinatruong/how-to-rewrite-your-sql-queries-in-pandas-and-more-hoa9l8z4k
